@@ -4,8 +4,6 @@ author: "fmalet"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
   html_document:
-    keep_md: true
-    self_contained: false
     toc: true
     toc_float:
       collapsed: false
@@ -79,7 +77,7 @@ http://www.viewsurf.com/univers/surf/vue/4733-france-pays-de-la-loire-saint-gill
 <iframe src="http://www.infoclimat.fr/infoclimat/vignette_fiche_temps.php?s=000N4" frameborder=0 marginwidth=0 marginheight=0 border=0 width="112px" height="85px" scrolling="no"></iframe>
 </div>
 
-## Les vagues du jour
+## Les vagues du jour : Bouée du Ile d'Yeu Nord
 
 ```{r pressure, echo=FALSE, include=FALSE}
   library(httr)

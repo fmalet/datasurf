@@ -64,7 +64,7 @@ link_new_window:false
 <iframe src="http://www.infoclimat.fr/infoclimat/vignette_fiche_temps.php?s=000O3" frameborder=0 marginwidth=0 marginheight=0 border=0 width="112px" height="85px" scrolling="no"></iframe>
 </div>
 
-## Les vagues du jour
+## Les vagues du jour : Bouée du Plateau du Four
 
 ```{r pressure, echo=FALSE, include=FALSE}
   library(httr)
