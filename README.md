@@ -1,3 +1,3 @@
 # datasurf
 
-Data et surf dans R
+Data et surf dans R.
