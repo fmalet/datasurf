@@ -25,19 +25,18 @@ knitr::opts_chunk$set(message = FALSE)
 
 <div align="center">
 
-<!-- This code is issued by Magicseaweed.com under license 1523519931_19509 for the website  only subject to terms and conditions
+<!-- This code is issued by Magicseaweed.com under license 1523535968_30418 for the website  only subject to terms and conditions
 and this message being kept intact as part of the code. If you are not the license holder add this content to your website by registering at 
 Magicseaweed.com. All copyrights retained by Wavetrak Limited and any attempt to modify or redistribute this code is prohibited. 
 Please contact us for more information if required. -->
-<div style="width:260px;background:#fff"><script type="text/javascript" src="http://magicseaweed.com/syndicate/index.php?licenseKey=1523519931_19509"></script><p><div style="font-family:Arial, Helvetica, sans-serif;text-align:center;font-size:10px;color:#000;height:25px;"><a href="http://magicseaweed.com/Saint-Gilles-Croix-de-Vie-Surf-Report/1572/" style="color:#000;">Saint Gilles Croix de Vie Surf Report and Forecast</a></div></p></div>
+<div style="width:260px;background:#fff"><script type="text/javascript" src="http://magicseaweed.com/syndicate/index.php?licenseKey=1523535968_30418"></script><p><div style="font-family:Arial, Helvetica, sans-serif;text-align:center;font-size:10px;color:#000;height:25px;"><a href="http://magicseaweed.com/Sainte-Barbe-Surf-Report/1541/" style="color:#000;">Sainte-Barbe Surf Report and Forecast</a></div></p></div>
 </div>
-
 
 <script src="http://widget.windguru.cz/js/wg_widget.php" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
 //<![CDATA[
 WgWidget({
-s: 496869, odh:0, doh:24, wj:'knots', tj:'c', waj:'m', fhours:72, lng:'fr',
+s: 588536, odh:0, doh:24, wj:'knots', tj:'c', waj:'m', fhours:72, lng:'fr',
 params: ['WINDSPD','GUST','SMER','TMPE','CDC','APCPs'],
 first_row:true,
 spotname:true,
@@ -49,34 +48,20 @@ sun:true,
 link_archive:false,
 link_new_window:false
 },
-'wg_target_div_496869_57513678'
+'wg_target_div_588536_67531070'
 );
 //]]>
 </script>
-<div id="wg_target_div_496869_57513678"></div>
-
-## Webcam
-
-```{r, echo=FALSE, fig.align='center'}
-
-knitr::include_graphics(
-  sprintf("http://webcam.oceanis.fr/webcam/imgsurf.jpg?%i",
-            as.integer(Sys.time())
-          )
-  )
-
-```
-
-http://www.viewsurf.com/univers/surf/vue/4733-france-pays-de-la-loire-saint-gilles-croix-de-vie-plage
+<div id="wg_target_div_588536_67531070"></div>
 
 ## La météo
 
 <div align="center">
-<script charset='UTF-8' src='http://www.meteofrance.com/mf3-rpc-portlet/rest/vignettepartenaire/852220/type/VILLE_FRANCE/size/PAYSAGE_VIGNETTE' type='text/javascript'></script>
+<script charset='UTF-8' src='http://www.meteofrance.com/mf3-rpc-portlet/rest/vignettepartenaire/561680/type/VILLE_FRANCE/size/PAYSAGE_VIGNETTE' type='text/javascript'></script>
 </div>
 
 <div align="center">
-<iframe src="http://www.infoclimat.fr/infoclimat/vignette_fiche_temps.php?s=000N4" frameborder=0 marginwidth=0 marginheight=0 border=0 width="112px" height="85px" scrolling="no"></iframe>
+<iframe src="http://www.infoclimat.fr/infoclimat/vignette_fiche_temps.php?s=000M7" frameborder=0 marginwidth=0 marginheight=0 border=0 width="112px" height="85px" scrolling="no"></iframe>
 </div>
 
 ## Les vagues du jour
@@ -121,6 +106,8 @@ http://www.viewsurf.com/univers/surf/vue/4733-france-pays-de-la-loire-saint-gill
     gather(., mesure, valeur, -date_cet)
 ```
 
+
+
 ```{r, warning=FALSE, message=FALSE}
 
 data2 %>% 
@@ -147,6 +134,21 @@ data2 %>%
        title = "Période des vagues") +
     theme(plot.title = element_text(hjust = 0.5))
 
+data2 %>% 
+    ggplot(aes(x = date_cet, y = direction, color = periode, fill = periode)) +
+    geom_bar(stat = "identity") +
+    labs(y = "En secondes",
+       x = "Date",
+       title = "Direction des vagues") +
+    theme(plot.title = element_text(hjust = 0.5))
+
+data2 %>% 
+    ggplot(aes(x = date_cet, y = etalement, color = hauteur, fill = hauteur)) +
+    geom_bar(stat = "identity") +
+    labs(y = "",
+       x = "Date",
+       title = "Etalement des vagues") +
+    theme(plot.title = element_text(hjust = 0.5))
 
 data2 %>% 
     ggplot(aes(x = date_cet, y = temperature)) +
@@ -187,6 +189,6 @@ data2 %>%
 ## Les marées
 
 <div align="center">
-<script src="https://services.data.shom.fr/hdm/vignette/grande/LES_SABLES-D_OLONNE?locale=fr"></script>
+<script src="https://services.data.shom.fr/hdm/vignette/grande/LA_TRINITE-SUR-MER?locale=fr"></script>
 </div>
 
