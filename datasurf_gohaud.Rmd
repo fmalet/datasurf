@@ -1,0 +1,196 @@
+---
+title: "DATASURF Report Gohaud"
+author: "fmalet"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+    number_sections: false
+    theme: spacelab
+    highlight: textmate
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+
+```
+
+## Prévisions de MSW et Windguru
+
+<!-- This code is issued by Magicseaweed.com under license 1511344315_24821 for the website  only subject to terms and conditions
+and this message being kept intact as part of the code. If you are not the license holder add this content to your website by registering at 
+Magicseaweed.com. All copyrights retained by Metcentral Ltd and any attempt to modify or redistribute this code is prohibited. 
+Please contact us for more information if required. -->
+<div align="center">
+
+<div style="width:260px;background:#fff"><script type="text/javascript" src="http://magicseaweed.com/syndicate/index.php?licenseKey=1523517869_86868"></script><p><div style="font-family:Arial, Helvetica, sans-serif;text-align:center;font-size:10px;color:#000;height:25px;"><a href="http://magicseaweed.com/Gohaud-Surf-Report/4409/" style="color:#000;">Gohaud    Surf Report and Forecast</a></div></p></div>
+</div>
+
+
+<script src="http://widget.windguru.cz/js/wg_widget.php" type="text/javascript"></script>
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+WgWidget({
+s: 642903, odh:0, doh:24, wj:'knots', tj:'c', waj:'m', fhours:72, lng:'fr',
+params: ['WINDSPD','GUST','SMER','TMPE','CDC','APCPs'],
+first_row:true,
+spotname:true,
+first_row_minfo:true,
+last_row:true,
+lat_lon:true,
+tz:true,
+sun:true,
+link_archive:false,
+link_new_window:false
+},
+'wg_target_div_642903_82389655'
+);
+//]]>
+</script>
+<div id="wg_target_div_642903_82389655"></div>
+
+
+
+## La météo
+
+<div align="center">
+<script charset='UTF-8' src='http://www.meteofrance.com/mf3-rpc-portlet/rest/vignettepartenaire/441820/type/VILLE_FRANCE/size/PAYSAGE_VIGNETTE' type='text/javascript'></script>
+</div>
+
+<div align="center">
+<iframe src="http://www.infoclimat.fr/infoclimat/vignette_fiche_temps.php?s=000O3" frameborder=0 marginwidth=0 marginheight=0 border=0 width="112px" height="85px" scrolling="no"></iframe>
+</div>
+
+## Les vagues du jour
+
+```{r pressure, echo=FALSE, include=FALSE}
+  library(httr)
+  library(rvest)
+  library(dplyr)
+  library(tidyr)
+  library(ggplot2)
+  library(lubridate)
+  library(plotly)
+  
+  url <- "http://candhis.cetmef.developpement-durable.gouv.fr/campagne/inc-tempsreel.php?idcampagne=7647966b7343c29048673252e490f736"
+  test <- GET(url)
+  contenu <- content(test)
+  
+  data <- as.data.frame(html_table(contenu))
+  
+  data2 <- data %>% 
+      mutate(date_utc = dmy_hm(Date.et.heure.T.U.., tz = "UTC"),
+             date_cet = with_tz(dmy_hm(Date.et.heure.T.U.., tz = "UTC"), tz='CET'),
+             date = format(with_tz(dmy_hm(Date.et.heure.T.U.., tz = "UTC"), tz='CET'), '%A %d %b %Y'),
+             heure = format(with_tz(dmy_hm(Date.et.heure.T.U.., tz = "UTC"), tz='CET'), '%R'),
+             hauteur = H1.3.mètres.,
+             hauteur_max = Hmax.mètres.,
+             periode = Th1.3.secondes.,
+             direction = Dir.au.pic.degrés.,
+             etalement = Etalement.au.pic.degrés.,
+             temperature = Température.mer.degrés.C.
+             ) %>% 
+      select(
+             date_utc,
+             date_cet,
+             date,
+             heure,
+             hauteur,
+             hauteur_max,
+             periode,
+             direction,
+             etalement,
+             temperature)
+  
+  data4 <- data2 %>% 
+    select(-date_utc, -date, -heure) %>% 
+    gather(., mesure, valeur, -date_cet)
+```
+
+```{r, warning=FALSE, message=FALSE}
+
+data2 %>% 
+    ggplot(aes(x = date_cet, y = hauteur, color = periode, fill = periode)) +
+    geom_bar(stat = "identity") +
+    labs(y = "En mètre",
+       x = "Date",
+       title = "Hauteur des vagues") +
+    theme(plot.title = element_text(hjust = 0.5))
+
+data2 %>% 
+    ggplot(aes(x = date_cet, y = hauteur_max, color = periode, fill = periode)) +
+    geom_bar(stat = "identity") +
+    labs(y = "En mètre",
+       x = "Date",
+       title = "Hauteur Max des vagues") +
+    theme(plot.title = element_text(hjust = 0.5))
+
+data2 %>% 
+    ggplot(aes(x = date_cet, y = periode)) +
+    geom_bar(stat = "identity") +
+    labs(y = "En secondes",
+       x = "Date",
+       title = "Période des vagues") +
+    theme(plot.title = element_text(hjust = 0.5))
+
+data2 %>% 
+    ggplot(aes(x = date_cet, y = direction, color = periode, fill = periode)) +
+    geom_bar(stat = "identity") +
+    labs(y = "En secondes",
+       x = "Date",
+       title = "Direction des vagues") +
+    theme(plot.title = element_text(hjust = 0.5))
+
+data2 %>% 
+    ggplot(aes(x = date_cet, y = etalement, color = hauteur, fill = hauteur)) +
+    geom_bar(stat = "identity") +
+    labs(y = "",
+       x = "Date",
+       title = "Etalement des vagues") +
+    theme(plot.title = element_text(hjust = 0.5))
+
+data2 %>% 
+    ggplot(aes(x = date_cet, y = temperature)) +
+    geom_bar(stat = "identity") +
+    labs(y = "En secondes",
+       x = "Date",
+       title = "Température de l'eau") +
+    theme(plot.title = element_text(hjust = 0.5))  
+
+
+data2 %>%
+    select(-date_utc,-date_cet) %>%
+    DT:: datatable(options = list(pageLength = 12))
+  
+  f1 <- list(
+    family = "Arial, sans-serif",
+    size = 18,
+    color = "lightgrey"
+    )
+  f2 <- list(
+    family = "Old Standard TT, serif",
+    size = 14,
+    color = "black"
+    )
+  a <- list(
+    title = "AXIS TITLE",
+    titlefont = f1,
+    showticklabels = TRUE,
+    tickangle = 45,
+    tickfont = f2,
+    exponentformat = "E"
+  )
+
+
+
+```
+
+## Les marées
+
+<div align="center">
+<script src="http://services.data.shom.fr/hdm/vignette/grande/PORNIC?locale=fr"></script>
+</div>
+
